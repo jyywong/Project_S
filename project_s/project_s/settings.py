@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Articles',
     'Accounts',
-    'widget_tweaks'
+    'widget_tweaks',
+    'ckeditor',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +84,12 @@ WSGI_APPLICATION = 'project_s.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
+        # 'NAME': 'Project_S',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'armsofcombat',
+        # 'HOST': 'localhost',
+        # 'PORT' :'5432'
     }
 }
 
@@ -127,9 +134,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
 
 # Account options
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'Article_list'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
+
