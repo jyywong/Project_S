@@ -17,7 +17,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username', 'type']
     # base_type = UserType.Undergrad
     objects = CustomUserManager()
-    
+
+
 
     def save(self, *args, **kwargs):
         created = self.pk is None

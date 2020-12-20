@@ -12,7 +12,7 @@ class Article (models.Model):
     PI = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE, related_name='article_PI')
     first_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE, related_name='article_FA')
     article_text = RichTextField(blank = True, null=True)
-    reviewers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='reviewers')
+    reviewers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='can_review')
 
     def __str__(self):
         truncated_name = Truncator(self.name)
@@ -28,8 +28,7 @@ class Article (models.Model):
             self.reviewers.add(reviewer)
 
         return self.reviewers
-        
-
+    
 
 class Simple_article (models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='s_article')
@@ -55,8 +54,18 @@ class S_article_submission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=150, choices=submission_status.choices, default = submission_status.not_submitted)
-    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviewed_this_submission')
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviewed_this_submission', null=True, blank=True)
     text = RichTextField(blank=True, null=True)
 
+    def __str__(self):
+        truncated_name = Truncator(self.article.name)
+        return truncated_name.chars(50) 
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.text = self.article.article_text
+
+
+        super().save(*args,**kwargs)
 
     

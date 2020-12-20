@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+
+
+
+<div class="container">
+    <h1 class="text-justify"> Review Inbox </h1>
+</div>
+
+<div class="container ">
+    
+    <div class="row">
+        <!-- <div class="col-4 bg-transparent">
+            <h2> Filter Options </h2>
+            <form method="get">
+                {% include 'includes/filter.html' %}
+                <button class="btn btn-outline-secondary" type="submit"> Add filter </button>
+            </form>
+        </div> -->
+        <div class="col-8 border border-secondary">
+            {% for article in articles %}
+            <div class="row">
+                <div class="card bg-transparent mb-2 border-dark" >
+                    <div class="card-header text-justify">
+                        <h5><a href="{% url 'Article_detail' article.pk %}">{{article.name}}</a></h5>
+                        <p class="text-light"> 
+                            {{article.first_author}}, {{article.PI}} 
+                        </p>
+                    </div>
+                    {% for submission in submissions %}
+                        {% if submission.article == article %}
+                            <div class="card-body pt-1 overflow-auto">
+                                <div class="card-text text-justify ">
+                                    <div class="d-flex justify-content-between text-info">
+                                        <div>
+                                            <a href="{% url 'reviewing page' submission.pk %}"> Submission by: {{ submission.created_by.username }} </a>
+                                        </div>
+                                        <div>
+                                            Status: {{submission.status}}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

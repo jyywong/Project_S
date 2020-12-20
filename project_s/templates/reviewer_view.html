@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container">
+    <h1 class="text-justify">Review</h1>
+</div>
+<div class="container border border-secondary">
+    <div class="row">
+        <div class="col-4">
+            <div class="list-group">
+                {% for submission in submissions %}
+                    <a href="{% url 'reviewing page' submission.id %}" class="list-group-item flex-column text-justify bg-transparent {% if submission.id == pk %} active {% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>{{submission.article.name | truncatechars:15}}</h5>
+                            
+                            <small> X days ago </small>
+                        </div>
+                        <p> {{submission.id}} Submitted by: {{submission.created_by}} </p>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="row justify-content-center">
+                {{form.text.label_tag}}
+                {{current.article.name}}
+            </div>
+            <div class="row justify-content-center">
+                {% render_field form.text class="form-control" %}
+            </div>
+            
+        </div>
+        <div class="col-2 ">
+            <form method="POST">
+                {% csrf_token %}
+                <!-- <div class="row">
+                    {{form.comments.label_tag}}
+                </div>
+                <div class="row">
+                    {% render_field form.comments class="form-control" %}
+                </div> -->
+                <div class="row">
+                    <div class="col">
+                        
+                        <input type="submit" class="btn bg-transparent btn-success" name="approve" value="Approve">
+                        <input type="submit" class="btn bg-transparent btn-primary" name="return_for_review" value="Return for review">
+                        <!-- <button class="btn btn-block btn-success mr-2"> 
+                            Approve 
+                        </button><button class="btn btn-block btn-primary">
+                            Return 
+                        </button> -->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+{% endblock content %}
