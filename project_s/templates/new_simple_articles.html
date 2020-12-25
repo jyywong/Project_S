@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <h1 class="text-justify"> Simplified Articles </h1>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-4 bg-transparent">
+            <h2> Filter Options </h2>
+            <form method="get">
+                {% include 'includes/filter.html' %}
+                <button class="btn btn-outline-secondary" type="submit"> Add filter </button>
+            </form>
+        </div>
+        <div class="col-8">
+            {% for article in new_simples %}
+            <div class="card bg-transparent mb-2 border-dark" style="max-height: 15rem;">
+                <div class="card-header text-justify">
+                    <h5><a href="{% url 'Simple_article_detail' article.pk %}"> Simplified: {{article.article.name | truncatechars:50}}</a></h5>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-light"> 
+                            Written by: {{article.created_by}}
+                        </p>
+                        <p class="text-light"> 
+                           Created at: {{article.created_at}}
+                        </p>
+                    </div>
+                    
+                    
+                </div>
+                <div class="card-body pt-1">
+                    <div class="card-text text-justify ">
+                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aperiam, repudiandae quibusdam. Tempore at quam ad harum fugit dolore sequi nisi, ipsum voluptatem, perspiciatis minima. Praesentium neque esse iste architecto assumenda.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include 'includes/paginator.html' %}
+
+
+
+
+
+<!-- <div class="container ">
+    <div class="row justify-content-center">
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div> -->
+{% endblock content %}

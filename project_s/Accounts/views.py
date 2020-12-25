@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import SignUpForm
-
+from django.views.generic import ListView
 
 # Create your views here.
 def signup(request):
@@ -15,3 +15,4 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, template, {'form': form})
+

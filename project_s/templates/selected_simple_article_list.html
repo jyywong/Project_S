@@ -1,12 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-
-
-
-<div class="container">
-    <h1 class="text-justify"> Articles </h1>
-</div>
-
 <div class="container p-3">
 
         <div class="row">
@@ -43,8 +36,7 @@
             </form>
         </div>
         <div class="col-8">
-            {% for article in articles %}
-            <div class="card bg-transparent mb-2 border-dark" style="max-height: 15rem;">
+            <div class="card bg-transparent mb-2 border-secondary" style="max-height: 15rem;">
                 <div class="card-header text-justify">
                     <h5><a href="{% url 'Article_detail' article.pk %}">{{article.name}}</a></h5>
                     <p class="text-light"> 
@@ -57,8 +49,29 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% for simple in simples %}
+            <div class="card bg-transparent mb-2 border-dark" style="max-height: 15rem;">
+                <div class="card-header text-justify">
+                    <h5><a href="{% url 'Simple_article_detail' article.pk %}" class="text-success"> Simplified: {{simple.article.name | truncatechars:50}}</a></h5>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-light"> 
+                            Written by: {{simple.created_by}}
+                        </p>
+                        <p class="text-light"> 
+                        Created at: {{simple.created_at}}
+                        </p>
+                    </div>
+                    
+                    
+                </div>
+                <div class="card-body pt-1">
+                    <div class="card-text text-justify ">
+                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aperiam, repudiandae quibusdam. Tempore at quam ad harum fugit dolore sequi nisi, ipsum voluptatem, perspiciatis minima. Praesentium neque esse iste architecto assumenda.</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </div>
 

@@ -10,10 +10,22 @@ from django.contrib.auth.decorators import user_passes_test
 
 def ReviewerView(request, pk):
     current_submission = S_article_submission.objects.get(id=pk)
-    query = Article.objects.filter(reviewers=request.user)
-    submissions = S_article_submission.objects.filter( Q(article__in=query) & ( Q(status = 'Submitted') | Q(status = 'In Review')))
+    if request.user in current_submission.article.reviewers.all():
+        is_reviewer = True
+    if request.user in current_submission.article.approvers.all():
+        is_approver = True
+
+    if is_reviewer:
+        query = Article.objects.filter(approvers=request.user)
+        submissions = S_article_submission.objects.filter( Q(article__in=query) & ~Q(status = 'Awaiting submission'))
+    elif is_approver:
+        query = Article.objects.filter(reviewers=request.user)
+        submissions = S_article_submission.objects.filter( Q(article__in=query) & ( Q(status = 'Submitted') | Q(status = 'In Review')))
+    
     if current_submission not in submissions:
         return redirect('login')
+
+    
 
     form = Reviewer_Review_Form(
         initial={
@@ -22,8 +34,12 @@ def ReviewerView(request, pk):
     )
     if request.method == 'POST':
         form = Reviewer_Review_Form(request.POST)
-        if request.POST.get('approve'):
+        if request.POST.get('submit'):
             current_submission.status = 'Reviewed'
+            current_submission.save()
+            return redirect('reviewer_inbox')
+        elif request.POST.get('approve'):
+            current_submission.status = 'Approved'
             current_submission.save()
             return redirect('reviewer_inbox')
         elif request.POST.get('return_for_review'):
@@ -40,9 +56,11 @@ def ReviewerView(request, pk):
         'current' : current_submission,
         'form' : form,
         'submissions': submissions,
-        'pk': pk
+        'pk': pk,
+        'is_reviewer' : is_reviewer,
+        'is_approver' : is_approver
     }
-    return render(request, 'reviewer_view.html', context )
+    return render(request, 'reviewer_view2.html', context )
 
 class ReviewerInboxArticles(ListView):
     model = Article
@@ -82,3 +100,21 @@ class SubmitterInbox(ListView):
         user = self.request.user
         queryset = S_article_submission.objects.filter(created_by = user)
         return queryset
+
+class ApproverInbox(ListView):
+    model = Article
+    paginate_by = 5
+    context_object_name = 'articles'
+    template_name = 'approver_inbox.html'
+
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        queryset = Article.objects.filter(approvers = user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = Article.objects.filter(approvers = self.request.user)
+        submissions = S_article_submission.objects.filter( Q(article__in=query) & Q(status='Reviewed'))
+        context['submissions'] = submissions
+        return context 

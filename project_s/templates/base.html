@@ -19,11 +19,26 @@
       <header class="masthead mb-auto">
         <div class="inner">
           <h3 class="masthead-brand">Project S</h3>
-          <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
-            <a class="nav-link" href="{% url 'Article_list' %}">Articles</a>
+          <nav class="navbar nav-masthead justify-content-center">
+            
+            <a class="nav-link m-2" href="{% url 'home' %}">Home</a>
+            <a class="nav-link m-2" href="{% url 'Article_list' %}">Articles</a>
+            <a class="nav-link m-2" href="{% url 'New_simple_articles' %}">Simple Articles</a>
             {% if user.is_authenticated %}
-            <a class="nav-link" href="#">{{user.username}}</a>
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item m-2 dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" >{{user.username}}</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="{% url 'reviewer_inbox' %}"> Pending Reviews </a>
+                  <a class="dropdown-item" href="{% url 'approver_inbox' %}"> Pending Approvals </a>
+                  <a class="dropdown-item" href="{% url 'submitter_inbox' %}"> My submissions </a>
+                  <a class="dropdown-item" href="#"> My Profile </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"> Log Out </a>
+                </div>
+              </li>
+            </ul>
+            
             {% else %}
             <a class="nav-link" href="{% url 'login' %}">Log In</a>
             {% endif %}

@@ -141,3 +141,9 @@ LOGIN_REDIRECT_URL = 'Article_list'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
+# Need to make ckeditor responsive
+CKEDITOR_CONFIGS = {
+    'default': {
+        'height' : '40rem'
+    }
+}

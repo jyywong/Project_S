@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'review.html' %}
 {% block content %}
 
 
@@ -7,11 +7,11 @@
 
 
 
-<div class="container">
-    <h1 class="text-justify"> My submissions </h1>
+<div class="container-fluid">
+    <h1 class="text-justify text-white"> My submissions </h1>
 </div>
 
-<div class="container">
+<div class="container-fluid m-3">
     
     <div class="row">
         <!-- <div class="col-4 bg-transparent">
@@ -21,10 +21,10 @@
                 <button class="btn btn-outline-secondary" type="submit"> Add filter </button>
             </form>
         </div> -->
-        <div class="col-8 border border-secondary">
+        <div class="col-8">
             {% for submission in submissions %}
             <div class="row">
-                <div class="card bg-transparent mb-2 border-dark" >
+                <div class="card bg-transparent mb-2 shadow-lg" style="width: 60rem;" >
                     <div class="card-header text-justify">
                         <h5><a href="#">{{submission.article.name}}</a></h5>
                         <p class="text-light"> 

@@ -1,0 +1,81 @@
+{% extends 'review.html' %}
+{% load widget_tweaks%}
+{% block content %}
+
+
+<div class="container-fluid border border-secondary">
+    <div class="row">
+        <div class="col-4">
+                <h3 class="text-white"> Review Inbox </h3>
+                {% for submission in submissions %}
+                <a href="{% url 'reviewing page' submission.id %}" class=" flex-column m-3 text-justify bg-transparent ">
+                  <div class="card bg-transparent mb-2 shadow-lg {% if submission.id == pk %} border-white {% endif %}" style="width: 35rem;">
+                    <div class="card-header text-justify">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5> {{submission.article.name | truncatechars:40}}</h5>
+                        
+                        <small> X days ago </small>
+                    </div>
+                    </div class="card-body pt-1 overflow-auto">
+                      <div class="card-text text-justify">
+                        <p class="ml-3">  Submitted by: {{submission.created_by}} </p>
+                      </div>
+                          
+                          
+                    
+                  </div>
+                </a>
+                {% endfor %}
+                
+        </div>
+        <div class="col">
+          <div class="row justify-content-center">
+            <div class="progress mt-2" style="width: 53rem; height: 30px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated " role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> 10%</div>
+            </div>
+          </div>
+            <div class="row justify-content-center">
+                <br>
+                <br>
+                
+                <h3 class="text-white"> Status: {{current.status}} </h3>
+            </div>
+            <form method="POST">
+              {% csrf_token %}
+              <!-- <div class="row">
+                  {{form.comments.label_tag}}
+              </div>
+              <div class="row">
+                  {% render_field form.comments class="form-control" %}
+              </div> -->
+              <div class="row mt-2 ">
+                  <div class="col">
+                    <div class="row justify-content-center mb-3">
+                        {% if is_reviewer == True %}
+                        <input type="submit" class="btn bg-transparent btn-success" name="submit" value="Submit for approval">
+                        {% endif %}
+                        {% if is_approver == True %}
+                            <input type="submit" class="btn bg-transparent btn-success" name="approve" value="Approve">
+                        {% endif %}
+                        <input type="submit" class="btn bg-transparent btn-primary" name="return_for_review" value="Return for review">
+
+                        <!-- <button class="btn btn-block btn-success mr-2"> 
+                            Approve 
+                        </button><button class="btn btn-block btn-primary">
+                            Return 
+                        </button> -->
+                    </div>
+                  </div>
+              </div>
+          </form>
+            <div class="row justify-content-center">
+                {{form.media}}
+                {% render_field form.text class="form-control"%}
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+{% endblock content %}

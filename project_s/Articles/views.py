@@ -24,15 +24,15 @@ class ArticleListView(ListView):
         return context 
     
     def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
         query = self.request.GET.get('q')
-        
         if not query:
-            queryset = super().get_queryset(*args, **kwargs)
-        else:
-            queryset = Article.objects.filter(Q(name__icontains = query))
-        myfilter = ArticleFilter(self.request.GET, queryset = queryset)
-        filtered_queryset = myfilter.qs
+            query = ' '
 
+        myfilter = ArticleFilter(self.request.GET,  queryset = queryset)
+        myfilter.name = query
+        filtered_queryset = myfilter.qs
+        # Grab search bar data using request.POST.get, then combine that value with the filter form query
         # Use intersect function to combine the query from search bar and the filter form
         return filtered_queryset
 
@@ -43,9 +43,7 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        current_article = Article.objects.get(id = self.kwargs['pk'])
-        corresponding_simple = Simple_article.objects.get(article = current_article)
-        context['simple'] = corresponding_simple.id
+        context['id'] = self.kwargs.get('pk')
         return context 
 
 class SimpleArticleListView(ListView):
@@ -72,6 +70,17 @@ class SimpleArticleListView(ListView):
         # Use intersect function to combine the query from search bar and the filter form
         return queryset
 
+class SimpleArticleSelectedView(DetailView):
+    model = Article
+    paginate_by = 5
+    context_object_name = 'article'
+    template_name = 'selected_simple_article_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['simples'] = Simple_article.objects.filter(article__id = self.kwargs['pk'] )
+        return context
+
 class SimpleArticleDetailView(DetailView):
     model = Simple_article
     template_name = 'simple_article_detail.html'
@@ -81,3 +90,12 @@ class NewSimpleArticleSubmission(CreateView):
     model = S_article_submission
     fields = ['text']
     template_name = 'new_simple_article_submission.html'
+
+class NewSimpleArticles(ListView):
+    model = Simple_article
+    template_name = 'new_simple_articles.html'
+    context_object_name = 'new_simples'
+    paginate_by = 5
+    def get_queryset(self, *args, **kwargs):
+        queryset = Simple_article.objects.order_by('-created_at')
+        return queryset

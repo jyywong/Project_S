@@ -13,14 +13,15 @@ class Article (models.Model):
     first_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE, related_name='article_FA')
     article_text = RichTextField(blank = True, null=True)
     reviewers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='can_review')
-
+    approvers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='can_approve')
     def __str__(self):
         truncated_name = Truncator(self.name)
         return truncated_name.chars(50)
 
     def save(self, *args, **kwargs):
-        default_reviewers = [self.PI, self.first_author]
-        self.add_reviewers(default_reviewers)
+        defaults = [self.PI, self.first_author]
+        self.add_reviewers(defaults)
+        self.add_approvers(defaults)
         super().save(*args, **kwargs)
 
     def add_reviewers(self, new_reviewers):
@@ -28,6 +29,12 @@ class Article (models.Model):
             self.reviewers.add(reviewer)
 
         return self.reviewers
+
+    def add_approvers(self, new_approvers):
+        for approver in new_approvers:
+            self.approvers.add(approver)
+
+        return self.approvers
     
 
 class Simple_article (models.Model):
@@ -47,6 +54,7 @@ class S_article_submission(models.Model):
         submitted = 'Submitted', ('Submitted')
         in_review = 'In Review', ('In Review')
         reviewed = 'Reviewed', ('Reviewed')
+        approved = 'Approved', ('Approved')
 
 
     article = models.ForeignKey(Article, on_delete= models.CASCADE, related_name='submission')
@@ -64,6 +72,13 @@ class S_article_submission(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.text = self.article.article_text
+        if self.status == 'Approved':
+            Simple_article.objects.create(
+                article = self.article,
+                simple_text = self.text,
+                created_by = self.created_by
+            )
+
 
 
         super().save(*args,**kwargs)
