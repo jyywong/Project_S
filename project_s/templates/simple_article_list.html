@@ -37,7 +37,7 @@
         </div>
         <div class="col-8">
             {% for article in articles %}
-            <div class="card bg-transparent mb-2 border-dark" style="max-height: 15rem;">
+            <div class="card bg-transparent mb-2 shadow-lg rounded" style="max-height: 15rem;">
                 <div class="card-header text-justify">
                     <h5><a href="{% url 'Article_detail' article.pk %}"> SIMPLIFIED - {{article.article.name}}</a></h5>
                     <p class="text-light"> 

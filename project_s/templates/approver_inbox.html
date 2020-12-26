@@ -36,10 +36,10 @@
                             <div class="card-body pt-1 overflow-auto">
                                 <a href="{% url 'reviewing page' submission.pk %}">
                                     <div class="card-text text-justify ">
-                                        <h4> Simplified </h4>
+                                        <h4 class="text-white"> Simplified </h4>
                                         <div class="d-flex justify-content-between text-info">
                                             <div>
-                                                Submission by: {{ submission.created_by.username }} pk: {{submission.id}}
+                                                Submission by: {{ submission.created_by.username }}
                                             </div>
                                             <div>
                                                 Status: {{submission.status}}

@@ -4,10 +4,11 @@ from django.views.generic.edit import FormView
 from django.views.generic import ListView
 from .forms import Reviewer_Review_Form
 from django.db.models import Q
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 # Create your views here.
 
-
+@login_required
 def ReviewerView(request, pk):
     current_submission = S_article_submission.objects.get(id=pk)
     if request.user in current_submission.article.reviewers.all():
@@ -62,6 +63,7 @@ def ReviewerView(request, pk):
     }
     return render(request, 'reviewer_view2.html', context )
 
+@method_decorator(login_required, name='dispatch')
 class ReviewerInboxArticles(ListView):
     model = Article
     paginate_by = 5
@@ -80,7 +82,7 @@ class ReviewerInboxArticles(ListView):
         context['submissions'] = submissions
         return context 
 
-
+@method_decorator(login_required, name='dispatch')
 class SubmitterInbox(ListView):
     model = S_article_submission
     paginate_by = 5
@@ -101,6 +103,7 @@ class SubmitterInbox(ListView):
         queryset = S_article_submission.objects.filter(created_by = user)
         return queryset
 
+@method_decorator(login_required, name='dispatch')
 class ApproverInbox(ListView):
     model = Article
     paginate_by = 5

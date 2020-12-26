@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView
 from .models import Simple_article, Article, S_article_submission
-from .filters import ArticleFilter
+from .filters import ArticleFilter, SimpleArticleFilter
 from django.db.models import Q
 # Create your views here.
 def home(request):
@@ -16,7 +16,7 @@ class ArticleListView(ListView):
     model = Article
     paginate_by = 10
     context_object_name = 'articles'
-    template_name = 'article_list.html'
+    template_name = 'article_list2.html'
    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,12 +25,9 @@ class ArticleListView(ListView):
     
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        query = self.request.GET.get('q')
-        if not query:
-            query = ' '
-
         myfilter = ArticleFilter(self.request.GET,  queryset = queryset)
-        myfilter.name = query
+        # myfilter.form.fields['name'] 
+
         filtered_queryset = myfilter.qs
         # Grab search bar data using request.POST.get, then combine that value with the filter form query
         # Use intersect function to combine the query from search bar and the filter form
@@ -58,18 +55,12 @@ class SimpleArticleListView(ListView):
         return context 
     
     def get_queryset(self, *args, **kwargs):
-        query = self.request.GET.get('q')
-        
-        if not query:
-            queryset = super().get_queryset(*args, **kwargs)
-        else:
-            queryset = Simple_article.objects.filter(Q(name__icontains = query))
-        # myfilter = ArticleFilter(self.request.GET, queryset = queryset)
-        # filtered_queryset = myfilter.qs
-
+        queryset = super().get_queryset(*args, **kwargs)
+        myfilter = SimpleArticleFilter(self.request.GET,  queryset = queryset)
+        filtered_queryset = myfilter.qs
+        # Grab search bar data using request.POST.get, then combine that value with the filter form query
         # Use intersect function to combine the query from search bar and the filter form
-        return queryset
-
+        return filtered_queryset
 class SimpleArticleSelectedView(DetailView):
     model = Article
     paginate_by = 5
@@ -96,6 +87,15 @@ class NewSimpleArticles(ListView):
     template_name = 'new_simple_articles.html'
     context_object_name = 'new_simples'
     paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = SimpleArticleFilter()
+        return context 
     def get_queryset(self, *args, **kwargs):
         queryset = Simple_article.objects.order_by('-created_at')
-        return queryset
+        myfilter = SimpleArticleFilter(self.request.GET,  queryset = queryset)
+        filtered_queryset = myfilter.qs
+        # Grab search bar data using request.POST.get, then combine that value with the filter form query
+        # Use intersect function to combine the query from search bar and the filter form
+        return filtered_queryset

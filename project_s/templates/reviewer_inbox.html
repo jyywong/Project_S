@@ -24,7 +24,7 @@
         <div class="col-8 ">
             {% for article in articles %}
             <div class="row">
-                <div class="card bg-transparent mb-2 shadow-lg" style="width: 60rem;" >
+                <div class="card bg-transparent mb-2 shadow-lg rounded" style="width: 60rem;" >
                     <div class="card-header text-justify">
                         <h5><a href="{% url 'Article_detail' article.pk %}">{{article.name}}</a></h5>
                         <p class="text-light"> 
@@ -36,7 +36,7 @@
                             <div class="card-body pt-1 overflow-auto">
                                 <a href="{% url 'reviewing page' submission.pk %}">
                                     <div class="card-text text-justify ">
-                                        <h4>Simplified</h4>
+                                        <h4 class="text-white">Simplified</h4>
                                         <div class="d-flex justify-content-between text-info">
                                             <div>
                                                 Submission by: {{ submission.created_by.username }} 

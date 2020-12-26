@@ -9,7 +9,7 @@
 {% endif%}
 
 {% for field in filter.form %}
-  {% if field.id_for_label != 'id_name' %}
+  {% if field.id_for_label != 'id_article__name' %}
     <div class="form-group">
       {{ field.label_tag }}
       {% if filter.form.is_bound %}

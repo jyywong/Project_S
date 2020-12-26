@@ -31,7 +31,33 @@
         <div class="col">
           <div class="row justify-content-center">
             <div class="progress mt-2" style="width: 53rem; height: 30px;">
-                <div class="progress-bar progress-bar-striped progress-bar-animated " role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"> 10%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated " role="progressbar" 
+                  style="
+                    {% if current.status == 'Awaiting submission' %}
+                      width: 0%
+                    {% elif current.status == 'Submitted' %}
+                      width: 25%
+                    {% elif current.status == 'In Review' %}
+                      width: 50%
+                    {% elif current.status == 'Reviewed' %}
+                      width: 75%
+                    {% elif current.status == 'Approved' %}
+                      width: 100%
+                    {% endif %}
+                    "
+                aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                {% if current.status == 'Awaiting submission' %}
+                   0%
+                {% elif current.status == 'Submitted' %}
+                   25%
+                {% elif current.status == 'In Review' %}
+                   50%
+                {% elif current.status == 'Reviewed' %}
+                   75%
+                {% elif current.status == 'Approved' %}
+                   100%
+                  {% endif %}
+                </div>
             </div>
           </div>
             <div class="row justify-content-center">
@@ -52,12 +78,12 @@
                   <div class="col">
                     <div class="row justify-content-center mb-3">
                         {% if is_reviewer == True %}
-                        <input type="submit" class="btn bg-transparent btn-success" name="submit" value="Submit for approval">
+                        <input type="submit" class="btn bg-transparent btn-success m-1" name="submit" value="Submit for approval">
                         {% endif %}
                         {% if is_approver == True %}
-                            <input type="submit" class="btn bg-transparent btn-success" name="approve" value="Approve">
+                            <input type="submit" class="btn bg-transparent btn-success m-1" name="approve" value="Approve">
                         {% endif %}
-                        <input type="submit" class="btn bg-transparent btn-primary" name="return_for_review" value="Return for review">
+                        <input type="submit" class="btn bg-transparent btn-primary m-1" name="return_for_review" value="Return for review">
 
                         <!-- <button class="btn btn-block btn-success mr-2"> 
                             Approve 
